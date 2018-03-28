@@ -36,7 +36,8 @@ namespace Atomia.Store.Themes.Default.Adapters
         {
             var data = domainsProvider.FindDomains(searchTerms);
 
-            var tlds = DomainSearchHelper.StripProtocolFromDomainNames(searchTerms.ToArray());
+            var tlds = GetTldsForSearchedDomains(searchTerms);
+
             data.Results = AddPremiumCustomAttribute(data.Results, tlds);
 
             System.Web.HttpContext.Current.Session[sessionPrefix + data.DomainSearchId] = searchTerms;
@@ -55,7 +56,7 @@ namespace Atomia.Store.Themes.Default.Adapters
             var tlds = new List<string>();
             if(searchTerms != null)
             {
-                tlds = DomainSearchHelper.StripProtocolFromDomainNames(searchTerms.ToArray());
+                tlds = GetTldsForSearchedDomains(searchTerms);
             }
 
             data.Results = AddPremiumCustomAttribute(data.Results, tlds);
@@ -106,6 +107,29 @@ namespace Atomia.Store.Themes.Default.Adapters
             }
 
             return domains;
+        }
+
+        private List<string> GetTldsForSearchedDomains(ICollection<string> searchTerms)
+        {
+            var tlds = new List<string>();
+            var domainNames = DomainSearchHelper.StripProtocolFromDomainNames(searchTerms.ToArray())
+                                                    .Select(s => s + ".").ToList();
+
+            foreach (var term in searchTerms)
+            {
+                if (term.Contains("."))
+                {
+                    if(domainNames.Any(d => term.Contains(d)))
+                    {
+                        var domainName = domainNames.Where(d => term.Contains(d)).FirstOrDefault();
+                        var startIndex = term.IndexOf(domainName) + domainName.Length;
+                        var tld = term.Substring(startIndex, term.Length - startIndex);
+                        tlds.Add(tld);
+                    }
+                }
+            }
+
+            return tlds;
         }
     }
 }
