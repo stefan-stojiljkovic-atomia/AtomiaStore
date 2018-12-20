@@ -51,7 +51,7 @@ namespace Atomia.Store.AspNetMvc.Models
         /// <summary>
         /// Available <see cref="Atomia.Store.Core.CustomerType">CustomerTypes</see> usable as select list.
         /// </summary>
-        public virtual IEnumerable<SelectListItem> CustomerTypeOptions { 
+        public virtual IEnumerable<SelectListItem> CustomerTypeOptions {
             get
             {
                 var customerTypes = customerTypeProvider.GetCustomerTypes();
@@ -258,7 +258,7 @@ namespace Atomia.Store.AspNetMvc.Models
     }
 
     /// <summary>
-    /// Any sub-forms must implement this class to be compatible with CustomerValidation since certain 
+    /// Any sub-forms must implement this class to be compatible with CustomerValidation since certain
     /// properties are expected on the form being validated, i.e. the sub-form, but are in this case provided by the customer via the parent form.
     /// </summary>
     /// <remarks>The Parent property should be set by the parent form</remarks>
@@ -319,7 +319,7 @@ namespace Atomia.Store.AspNetMvc.Models
         /// Customer provided national corporate identification / registration number for the company
         /// </summary>
         [AtomiaRequired("Common,ErrorEmptyField")]
-        [CustomerValidation(CustomerValidationType.IdentityNumber, "CustomerValidation,CompanyIdentityNumber", CountryField = "Country", ProductField = "CartItems.ArticleNumber", ResellerIdField = "ResellerId")]
+        [CustomerValidation(CustomerValidationType.CompanyIdentityNumber, "CustomerValidation,CompanyIdentityNumber", CountryField = "Country", ProductField = "CartItems.ArticleNumber", ResellerIdField = "ResellerId")]
         public virtual string IdentityNumber { get; set; }
 
         /// <summary>
