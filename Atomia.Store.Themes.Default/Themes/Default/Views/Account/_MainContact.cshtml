@@ -13,7 +13,7 @@
             @Html.DropDownListFor(m => m.CustomerType, Model.CustomerTypeOptions, new { data_bind = "value: mainContactCustomerType" })
         </label>
         @Html.ValidationMessageFor(m => m.CustomerType)
-</div>
+    </div>
     <br class="clear">
 </div>
 
@@ -29,12 +29,34 @@
 
 <div data-bind="slideVisible: mainContactIsCompany, slideDuration: 300">
     @Html.FormRowFor(m => m.CompanyInfo.CompanyName, Html.CommonResource("CompanyName") + ":", true, "if: mainContactIsCompany")
-    @Html.FormRowFor(m => m.CompanyInfo.IdentityNumber, Html.CommonResource("CompanyIdentityNumber") + ":", true, "if: mainContactIsCompany")
-    @Html.FormRowFor(m => m.CompanyInfo.VatNumber, Html.CommonResource("VatNumber") + ":", false, "if: mainContactIsCompany")
+    <div class="formrow" data-bind="if: mainContactIsCompany()">
+        <h5>
+            <span class="required">
+            *</span>@Html.LabelFor(m => m.CompanyInfo.IdentityNumber, Html.CommonResource("CompanyIdentityNumber") + ":", new { @class = "required" })
+        </h5>
+        <div class="col2row">
+            @Html.TextBoxFor(m => m.CompanyInfo.IdentityNumber, new { data_bind = "event: {change: fixSpecialChars}" })
+        </div>
+    </div>
+    <div class="formrow" data-bind="if: mainContactIsCompany()">
+        <h5>
+            @Html.LabelFor(m => m.CompanyInfo.VatNumber, Html.CommonResource("VatNumber") + ":")
+        </h5>
+        <div class="col2row">
+            @Html.TextBoxFor(m => m.CompanyInfo.VatNumber, new { data_bind = "event: {change: fixSpecialChars}" })
+        </div>
+    </div>
 </div>
 
 <div data-bind="slideVisible: !mainContactIsCompany(), slideDuration: 300">
-    @Html.FormRowFor(m => m.IndividualInfo.IdentityNumber, Html.CommonResource("IndividualIdentityNumber") + ":", false, "if: !mainContactIsCompany()")
+    <div class="formrow" data-bind="if: !mainContactIsCompany()">
+        <h5>
+            @Html.LabelFor(m => m.IndividualInfo.IdentityNumber, Html.CommonResource("IndividualIdentityNumber") + ":")
+        </h5>
+        <div class="col2row">
+            @Html.TextBoxFor(m => m.IndividualInfo.IdentityNumber, new { data_bind = "event: {change: fixSpecialChars}" })
+        </div>
+    </div>
 </div>
 
 @Html.FormRowFor(m => m.Address, Html.CommonResource("Address") + ":", true)
@@ -59,6 +81,7 @@
 @Html.FormRowFor(m => m.Phone, Html.CommonResource("Phone") + ":", true)
 
 <div id="CustomFields" data-bind="template: {name: 'js-custom-fields-template', foreach: customFields}"></div>
+
 <!-- /ko -->
 
 <script type="text/html" id="js-custom-fields-template">

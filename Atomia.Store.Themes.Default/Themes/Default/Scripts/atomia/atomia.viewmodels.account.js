@@ -16,7 +16,7 @@ Atomia.ViewModels = Atomia.ViewModels || {};
     /** Create a Knockout view model for coordinating main and billing contact data. */
     function AccountModel() {
         var self = this;
-            
+
         self.mainContactCustomerType = ko.observable('individual');
         self.billingContactCustomerType = ko.observable('individual');
         self.otherBillingContact = ko.observable(false);
@@ -37,7 +37,7 @@ Atomia.ViewModels = Atomia.ViewModels || {};
         self.mainContactIsCompany = ko.pureComputed(function () {
             return self.mainContactCustomerType() === 'company';
         });
-                
+
         self.billingContactIsCompany = ko.pureComputed(function () {
             return self.billingContactCustomerType() === 'company';
         });
@@ -69,7 +69,7 @@ Atomia.ViewModels = Atomia.ViewModels || {};
             cartArray.forEach(function (cartItem) {
                 data.products.push(cartItem.articleNumber);
             });
-            
+
             if (self.customFields().length > 0) {
                 self.customFields().forEach(function(field, index) {
                     data['existingFields[' + index + '].Key'] = field.name;
@@ -101,6 +101,10 @@ Atomia.ViewModels = Atomia.ViewModels || {};
                 self.updateCustomFields();
             }
         });
+
+        self.fixSpecialChars = function () {
+            arguments[1].target.value = arguments[1].target.value.replace(/\u2014/g, '-');
+        };
 	}
 
 
